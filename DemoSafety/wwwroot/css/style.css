@@ -1,0 +1,45 @@
+﻿.toast-success {
+    background-color: #dcf1e4 !important;
+    color: #0c622e !important;
+    border-color: #a1dbb8 !important;
+}
+
+.toast-primary {
+    background-color: #e2eaf7 !important;
+    color: #2f5aa2 !important;
+    border-color: #b1c6ea !important;
+}
+
+.toast-warning {
+    background-color: #fbf1dd !important;
+    color: #896110 !important;
+    border-color: #f4d9a4 !important;
+}
+
+.toast-danger {
+    background-color: #fae4e8 !important;
+    color: #b03d50 !important;
+    border-color: #f1b7c1 !important;
+}
+
+.gradient-custom {
+    background: url(/image/images.jpg) no-repeat center; /*linear-gradient(135deg, rgba(8, 133, 223,0.5) 33%, rgba(6, 179, 205,0.5) 66%, rgba(5, 230, 187,0.5))*/
+    background-size: cover;
+}
+
+.gradient-custom-2 {
+    background-color: rgba(255, 255, 255, 0) !important;
+    background: radial-gradient(circle,rgba(0,0,0,0) 10%, rgba(0,0,0,0.5) 300%);
+}
+
+.gradient-custom-3 {
+    background: linear-gradient(to right, rgba(178, 247, 192,1), rgba(178, 219, 239,1))
+}
+
+.card {
+    border: none;
+}
+
+select {
+    text-overflow: ellipsis;
+}
