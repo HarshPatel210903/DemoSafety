@@ -12,6 +12,7 @@ namespace DemoSafety.Pages
     public class LoginModel : PageModel
     {
         public List<SelectListItem> Organizations { get; set; }
+
         private readonly string connectionString;
         public LoginModel(IConfiguration configuration)
         {

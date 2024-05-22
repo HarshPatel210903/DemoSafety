@@ -1,4 +1,37 @@
 ﻿@page
 @model DemoSafety.Pages.principalModel
 @{
+    Layout = "/Pages/Shared/college.cshtml";
 }
+@section Header {
+    <li class="">
+        <a asp-page="/principal" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                Dashboard
+            </button>
+        </a>
+    </li>
+    <li class="">
+        <a asp-page="/viewCertificate" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                View Certificates
+            </button>
+        </a>
+    </li>
+    <li class="">
+        <a asp-page="/addCertificate" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                Add Certificate
+            </button>
+        </a>
+    </li>
+}
+<div class="card bg-dark">
+    <div class="card-body  text-center">
+        <div class="row m-0 h-auto">
+            <div class="col d-flex justify-content-center text-white">
+                <b class="align-self-center">some content of principal's screen</b>
+            </div>           
+        </div>
+    </div>
+</div>

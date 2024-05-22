@@ -1,6 +1,21 @@
 ﻿$(document).ready(function () {
     let emptymsg = '*This field is required*';
     var emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    $('select').on('blur', function () {
+        var $this = $(this);
+        var id = $this.attr('id');
+        var $errElement = $('#' + id + 'err');
+        if ($this.find(':selected').val() == '') {
+            $errElement.text('Select ' + $this.attr('id')).show();
+        }
+    }).change(function () {
+        var $this = $(this);
+        var id = $this.attr('id');
+        var $errElement = $('#' + id + 'err');
+        if ($this.find(':selected').val() != '') {
+            $errElement.empty();
+        }
+    });
     $('#log-user').blur(function () {
         $('#log-usererr').empty();
         if ($(this).val() == '') {
@@ -26,13 +41,17 @@
         if ($('#log-pass').val() == "") {
             $('#log-passerr').text(emptymsg);
         }
-        if ($('small:lt(2)').text() == '') {
+        if ($('#Organization').find(':selected').val() == "") {
+            $('#Organizationerr').text(emptymsg);
+        }
+        if ($('small:lt(3)').text() == '') {
             var formData = {
                 email: $('#log-user').val(),
-                password: $('#log-pass').val()
+                password: $('#log-pass').val(),
+                org: $('#Organization').val()
             };
             $.ajax({
-                url: 'https://localhost:7184/api/Login',
+                url: 'https://localhost:7164/api/Login',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
@@ -43,13 +62,14 @@
                     document.cookie = "email=" + formData.email + "; path=/";
                     document.cookie = "password=" + formData.password + "; path=/";
                     document.cookie = "role=" + response.role + "; path=/";
+                    document.cookie = "userId=" + response.userId + "; path=/";
                     setTimeout(function () {
                         $('#login-form').trigger('reset');
-                        if (response.role == "admin") {
-                            window.location.href = '/Student/ViewStudent';
+                        if (response.role == "Principal") {
+                            window.location.href = '/principal';
                         }
-                        else if (response.role == "student") {
-                            window.location.href = '/Student';
+                        else if (response.role == "Admin") {
+                            window.location.href = '/admin';
                         }
                     }, 1000);
                 },

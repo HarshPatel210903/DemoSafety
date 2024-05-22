@@ -23,18 +23,22 @@ namespace DemoSafety.Controllers
         {
             try
             {
-                string userQuery = "SELECT Password,RoleName FROM tUsers join tRoles on tRoles.RoleID = tUsers.Role WHERE email = @email";
-                SqlParameter[] parameters = { new SqlParameter("@email", model.email) };
+                string userQuery = "SELECT UserID,password,RoleName FROM tUsers "+
+                    "join tRoles on tRoles.RoleID = tUsers.Role "+
+                    "WHERE email = @email AND tRoles.RoleType = @org;";
+                SqlParameter[] parameters = { new SqlParameter("@email", model.email),
+                new SqlParameter("@org",model.org)};
 
                 DataTable result = await adoMethod.ExecuteAsyncTodata(connectionString, userQuery, parameters);
 
                 if (result.Rows.Count > 0)
                 {
+                    string userId = result.Rows[0]["UserID"].ToString();
                     string storedPassword = result.Rows[0]["password"].ToString();
                     string role = result.Rows[0]["RoleName"].ToString();
                     if (storedPassword == model.password)
                     {
-                        return Ok(new { message = "Authentication successful", role = role });
+                        return Ok(new { message = "Authentication successful", role = role, userId = userId });
                     }
                     else
                     {

@@ -8,5 +8,7 @@ namespace DemoSafety.Models
         public string email { get; set; }
         [Required]
         public string password { get; set; }
+        [Required]
+        public int org { get; set; }
     }
 }

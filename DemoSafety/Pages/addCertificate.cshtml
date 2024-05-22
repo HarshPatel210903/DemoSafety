@@ -1,0 +1,114 @@
+﻿@page
+@model DemoSafety.Pages.addCertificateModel
+@{
+    Layout = "/Pages/Shared/college.cshtml";
+}
+@section Header {
+    <li class="">
+        <a asp-page="/principal" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                Dashboard
+            </button>
+        </a>
+    </li>
+    <li class="">
+        <a asp-page="/viewCertificate" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                View Certificates
+            </button>
+        </a>
+    </li>
+    <li class="">
+        <a asp-page="/addCertificate" class="text-decoration-none">
+            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
+                Add Certificate
+            </button>
+        </a>
+    </li>
+}
+<div class="card gradient-custom">
+    <div class="card-body">
+        <div class="container card p-3 bg-dark text-white col-8 h-100">
+            <form class="row g-3 m-0 p-0">
+                <div class="col-6">
+                    <label for="name">Name</label>
+                    <input id="name" class="form-control" placeholder="Enter Name" />
+                    <span id="nameerr" class="text-danger error"></span>
+                </div>
+                <div class="col-12">
+                    <label for="Description">Description</label>
+                    <input id="Description" class="form-control" placeholder="Enter Description" />
+                    <span id="Descriptionerr" class="text-danger error"></span>
+                </div>
+                <button type="button" id="addCertificate" class="btn btn-primary col-auto mx-auto">Add</button>
+                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('input').on('blur', function () {
+            var $this = $(this);
+            var id = $this.attr('id');
+            var $errElement = $('#' + id + 'err');
+            if ($this.val() == '') {
+                $errElement.text(emptymsg).show();
+            }
+        }).change(function () {
+            var $this = $(this);
+            var id = $this.attr('id');
+            var $errElement = $('#' + id + 'err');
+            if ($this.find(':selected').val() != '') {
+                $errElement.empty();
+            }
+        });
+        $('#addCertificate').click(function () {
+            if ($('#name').val() == "") {
+                $('#nameerr').text(emptymsg);
+            }
+            if ($('#Description').val() == "") {
+                $('#Descriptionerr').text(emptymsg);
+            }
+            if ($('span.text-danger.error').text() == '') {
+                var userid = Cookies.get('userId');
+                var data = {
+                    StudentName: $('#name').val(),
+                    Description: $('#Description').val(),
+                    createdBy: userid
+                };
+                $.ajax({
+                    url: 'https://localhost:7164/api/CreateCerti',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response, status, xhr) {
+                        if (xhr.status === 200) {
+                            $('#liveToast .toast-body').text("certificate created successfully");
+                            $('#liveToast').removeClass('toast-primary toast-warning toast-danger').addClass('toast-success');
+                            $('.toast').toast('show');
+                            setTimeout(function () {
+                                $('form').trigger('reset');
+                                window.location.href = '/viewCertificate';
+                            }, 1000);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var message = 'An error occurred while processing your request.';
+                        if (xhr.status === 409) {
+                            message = xhr.responseJSON.message;
+                            $('#liveToast').removeClass('toast-primary toast-success toast-danger').addClass('toast-warning');
+                        }
+                        else {
+                            $('#liveToast').removeClass('toast-primary toast-success toast-warning').addClass('toast-danger');
+                        }
+                        $('#liveToast .toast-body').text(message);
+                        $('.toast').toast('show');
+                    }
+                });
+            }
+        });
+    });
+</script>
