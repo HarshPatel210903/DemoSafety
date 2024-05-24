@@ -32,7 +32,7 @@ namespace DemoSafety.Controllers
                 new SqlParameter("@Comments",comment)};
 
                 DataTable result = await adoMethod.ExecuteStoredProcedureAsync(connectionString, userQuery, parameters);
-                return Ok();
+                return Ok(new { message = "Approved Successfully" });
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace DemoSafety.Controllers
                 new SqlParameter("@Comments",comment)};
 
                 DataTable result = await adoMethod.ExecuteStoredProcedureAsync(connectionString, userQuery, parameters);
-                return Ok();
+                return Ok(new { message = "Rejected Successfully" });
             }
             catch (Exception ex)
             {

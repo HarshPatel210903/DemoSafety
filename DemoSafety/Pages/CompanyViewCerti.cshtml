@@ -122,12 +122,18 @@
                         userId: userid
                     }),
                     success: function (response) {
-                        console.log('Certificate approved:', response);
+                        $('#liveToast .toast-body').text(response.message);
+                        $('#liveToast').removeClass('toast-primary toast-warning toast-danger').addClass('toast-success');
+                        $('.toast').toast('show');
                         $('#row-' + selectedCertificateId).remove();
                         $('#Modal1').modal('hide');
                     },
-                    error: function (error) {
-                        console.error('Error approving certificate:', error);
+                    error: function (xhr, status, error) {
+                        var errorMessage = 'An error occurred while processing your request.';
+                        errorMessage = xhr.responseJSON.message;
+                        $('#liveToast').removeClass('toast-primary toast-success toast-warning').addClass('toast-danger');
+                        $('#liveToast .toast-body').text(errorMessage);
+                        $('.toast').toast('show');
                     }
                 });
             }
@@ -145,12 +151,18 @@
                         userId: userid
                     }),
                     success: function (response) {
-                        console.log('Certificate rejected:', response);
+                        $('#liveToast .toast-body').text(response.message);
+                        $('#liveToast').removeClass('toast-primary toast-warning toast-danger').addClass('toast-success');
+                        $('.toast').toast('show');
                         $('#row-' + selectedCertificateId).remove();
                         $('#Modal2').modal('hide');
                     },
                     error: function (error) {
-                        console.error('Error rejecting certificate:', error);
+                        var errorMessage = 'An error occurred while processing your request.';
+                        errorMessage = xhr.responseJSON.message;
+                        $('#liveToast').removeClass('toast-primary toast-success toast-warning').addClass('toast-danger');
+                        $('#liveToast .toast-body').text(errorMessage);
+                        $('.toast').toast('show');
                     }
                 });
             }
