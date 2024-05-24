@@ -3,31 +3,11 @@
 @{
     Layout = "/Pages/Shared/college.cshtml";
 }
-@section Header {
-    <li class="">
-        <a asp-page="/principal" class="text-decoration-none">
-            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
-                Dashboard
-            </button>
-        </a>
-    </li>
-    <li class="">
-        <a asp-page="/viewCertificate" class="text-decoration-none">
-            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
-                View Certificates
-            </button>
-        </a>
-    </li>
-    <li class="">
-        <a asp-page="/addCertificate" class="text-decoration-none">
-            <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
-                Add Certificate
-            </button>
-        </a>
-    </li>
-}
 <div class="card bg-dark">
     <div class="card-body  text-center">
+        <div class="row m-0 h-auto">
+           <a href="/addCertificate" class="text-end ms-auto m-3 p-0 col-auto"> <button class="btn btn-primary">Add <b>+</b></button></a>
+        </div><br />
         <div class="row m-0 h-auto">
             <div class="table-responsive mt-2">
                 <table class="table table-dark table-bordered">
@@ -51,7 +31,7 @@
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: 'https://localhost:7164/api/GetCertificate',
+            url: 'https://localhost:7164/api/GetCertificate/GetforPrincipal',
             method: 'GET',
             success: function (response) {
                 var data = response.data;

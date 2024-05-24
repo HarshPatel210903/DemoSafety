@@ -70,7 +70,7 @@
                     </a>
                     <ul class="list-unstyled w-100 h-100 ps-0" data-bs-theme="">
                         <li class="">
-                            <a asp-page="/admin" class="text-decoration-none">
+                            <a asp-page="/CompanyDashboard" class="text-decoration-none">
                                 <button class="btn btn-toggle btn-light d-flex align-items-center w-100 text-dark" type="button">
                                     Dashboard
                                 </button>
@@ -88,7 +88,7 @@
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             <img id="adminDP" src="https://github.com/mdo.png" class="m-0"
                                  style="border-radius: 50%; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); height: 40px; width: 40px;" alt="myprofile" />
-                            <span id="adminName" class="d-none d-sm-inline mx-1">loser</span>
+                            <span id="personName" class="d-none d-sm-inline mx-1">loser</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                             <li><a class="dropdown-item" id="signout">Sign out</a></li>
@@ -136,6 +136,8 @@
             let email = $.cookie('email');
             let password = $.cookie('password');
             let role = $.cookie('role');
+            let name = $.cookie('name');
+            $('#personName').text(name);
 
             $('#signout').click(function () {
                 document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

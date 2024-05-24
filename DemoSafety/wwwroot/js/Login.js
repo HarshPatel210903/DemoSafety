@@ -63,13 +63,14 @@
                     document.cookie = "password=" + formData.password + "; path=/";
                     document.cookie = "role=" + response.role + "; path=/";
                     document.cookie = "userId=" + response.userId + "; path=/";
+                    document.cookie = "name=" + response.name + "; path=/";
                     setTimeout(function () {
                         $('#login-form').trigger('reset');
                         if (response.role == "Principal") {
                             window.location.href = '/principal';
                         }
-                        else if (response.role == "Admin") {
-                            window.location.href = '/admin';
+                        else if (response.role != "Principal") {
+                            window.location.href = '/CompanyViewCerti';
                         }
                     }, 1000);
                 },

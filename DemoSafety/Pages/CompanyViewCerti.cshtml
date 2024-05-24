@@ -3,3 +3,157 @@
 @{
     Layout = "/Pages/Shared/company.cshtml";
 }
+
+<div class="card bg-dark">
+    <div class="card-body text-center">
+        <div class="row m-0 h-auto">
+            <div class="table-responsive mt-2">
+                <table class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Certificate ID</th>
+                            <th scope="col">Student Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Date Issued</th>
+                            <th scope="col">Approve</th>
+                            <th id="rejectColumn" scope="col">Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- Approve Modal -->
+                <div class="modal" id="Modal1" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Approve</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="comment1" class="form-label">Comment</label>
+                                <input id="comment1" class="form-control col-auto" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="SaveBtn1" type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Reject Modal -->
+                <div class="modal" id="Modal2" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Reject</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="comment2" class="form-label">Comment</label>
+                                <input id="comment2" class="form-control col-auto" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="SaveBtn2" type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var userid = Cookies.get('userId');
+        var role = Cookies.get('role');
+        var selectedCertificateId = null;
+
+        if (role === 'Admin') {
+            $('#rejectColumn').hide(); // Hide the reject column header
+        }
+
+        $.ajax({
+            url: 'https://localhost:7164/api/GetCertificate/GetforReviewer?userId=' + userid,
+            method: 'GET',
+            success: function (response) {
+                var data = response.data;
+                var tableBody = $('tbody');
+                tableBody.empty();
+
+                $.each(data, function (index, certificate) {
+                    var row = '<tr id="row-' + certificate.certificateID + '">' +
+                        '<td>' + certificate.certificateID + '</td>' +
+                        '<td>' + certificate.studentName + '</td>' +
+                        '<td>' + certificate.description + '</td>' +
+                        '<td>' + new Date(certificate.dateIssued).toLocaleDateString() + '</td>' +
+                        '<td><button class="col-auto btn btn-success approve-btn" data-certificate-id="' + certificate.certificateID + '" data-bs-toggle="modal" data-bs-target="#Modal1"><i class="bi bi-check2-circle"></i></button></td>';
+
+                    if (role !== 'Admin') {
+                        row += '<td><button class="col-auto btn btn-danger reject-btn" data-certificate-id="' + certificate.certificateID + '" data-bs-toggle="modal" data-bs-target="#Modal2"><i class="bi bi-x-circle"></i></button></td>';
+                    }
+
+                    row += '</tr>';
+                    tableBody.append(row);
+                });
+                $('tbody').on('click', '.approve-btn', function () {
+                    selectedCertificateId = $(this).data('certificate-id');
+                });
+                $('tbody').on('click', '.reject-btn', function () {
+                    selectedCertificateId = $(this).data('certificate-id');
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching certificates:', error);
+            }
+        });
+        $('#SaveBtn1').click(function () {
+            var comment = $('#comment1').val();
+            if (selectedCertificateId && comment) {
+                $.ajax({
+                    url: `https://localhost:7164/api/Certificate/ApproveCertificate?certificateId=${selectedCertificateId}&userId=${userid}&comment=${comment}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        certificateId: selectedCertificateId,
+                        comment: comment,
+                        userId: userid
+                    }),
+                    success: function (response) {
+                        console.log('Certificate approved:', response);
+                        $('#row-' + selectedCertificateId).remove();
+                        $('#Modal1').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error approving certificate:', error);
+                    }
+                });
+            }
+        });
+        $('#SaveBtn2').click(function () {
+            var comment = $('#comment2').val();
+            if (selectedCertificateId && comment) {
+                $.ajax({
+                    url: `https://localhost:7164/api/Certificate/RejectCertificate?certificateId=${selectedCertificateId}&userId=${userid}&comment=${comment}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        certificateId: selectedCertificateId,
+                        comment: comment,
+                        userId: userid
+                    }),
+                    success: function (response) {
+                        console.log('Certificate rejected:', response);
+                        $('#row-' + selectedCertificateId).remove();
+                        $('#Modal2').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error rejecting certificate:', error);
+                    }
+                });
+            }
+        });
+    });
+</script>

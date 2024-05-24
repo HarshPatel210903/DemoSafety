@@ -21,6 +21,7 @@ namespace DemoSafety.Controllers
 
 
         [HttpGet]
+        [Route("GetforPrincipal")]
         public async Task<IActionResult> GetforPrincipal()
         {
             try
@@ -47,6 +48,39 @@ namespace DemoSafety.Controllers
                 else
                 {
                     return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+            }
+        }
+        [HttpGet]
+        [Route("GetforReviewer")]
+        public async Task<IActionResult> GetforReviewer(int userId)
+        {
+            try
+            {
+                string userQuery = "[dbo].[pGetCertificatesForReviewer]";
+
+                DataTable result = await adoMethod.ExecuteStoredProcedureAsync(connectionString, userQuery, new SqlParameter("@reviewerID",userId));
+                if (result.Rows.Count > 0)
+                {
+                    List<Certificate> certiList = new List<Certificate>();
+                    foreach (DataRow row in result.Rows)
+                    {
+                        Certificate certi = new Certificate();
+                        certi.CertificateID = Convert.ToInt64(row["CertificateID"]);
+                        certi.StudentName = row["StudentName"].ToString();
+                        certi.Description = row["Description"].ToString();
+                        certi.DateIssued = Convert.ToDateTime(row["DateIssued"]);
+                        certiList.Add(certi);
+                    }
+                    return Ok(new { data = certiList, message = "certificates retrived successfully" });
+                }
+                else
+                {
+                    return Ok(new {message="no certificates to review"});
                 }
             }
             catch (Exception ex)

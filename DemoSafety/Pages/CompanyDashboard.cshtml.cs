@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DemoSafety.Pages
 {
-    public class adminModel : PageModel
+    public class CompanyDashboardModel : PageModel
     {
         public void OnGet()
         {
