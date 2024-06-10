@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DALForDemoSafety.Contacts
+namespace BALForDemoSafety.Extensions
 {
-    public interface IRepository
+    public interface Login
     {
         public CommonDataOut Login([FromBody] LoginFormModel model);
     }
